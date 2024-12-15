@@ -1,0 +1,83 @@
+#root {
+  max-width: 975px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 18px;
+  box-sizing: border-box;
+}
+
+.contenedor-principal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: solid 1px red;
+  line-height: 0.1em;
+  padding-inline: 1em;
+}
+.contenedor-principal:last-child{
+  align-items: center;
+}
+.contenedor-principal:last-child img{
+  max-height: 200px;
+  border-radius: 10%;
+}
+
+.informacion-personal {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+}
+.informacion-personal:first-child{
+  line-height: 0.8em;
+}
+.informacion-personal h1 {
+  font-size: 3em;
+}
+
+.informacion-personal h2 {
+  font-size: 1.3em;
+}
+
+.contenedor-svg{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  font-size: 16px;
+}
+.imagen-perfil img {
+  max-height: 200px;
+  border-radius: 10%;
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  #root {
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+
+@media (max-width: 767px) {
+  #root {
+    margin: 0 auto;
+    text-align: center;
+  }
+  .contenedor-principal {
+    display: flex;
+    padding-inline: 0;
+  }
+
+  .contenedor-principal:last-child img{
+    max-height: 140px;
+    border-radius: 10%;
+  }
+
+  .informacion-personal h1 {
+    font-size: 24px;
+  }
+
+  .informacion-personal h2 {
+    font-size: 16px;
+  }
+
+}

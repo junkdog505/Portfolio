@@ -1,0 +1,18 @@
+{
+    "Personal":[
+        {
+            "nombres" : "Edison Cristian",
+            "apellidos" :"Amezquita Soto",
+            "edad" : 23,
+            "correo" : "junkdog505@gmail.com",
+            "ciudad" : "Arequipa",
+            "pais" : "Perú"
+        }
+    ],
+    "Estudios" : [
+        {
+            "carrera" : "Ingeniería de Sistemas",
+            "grado" : "Bachiller"
+        }
+    ]
+}
