@@ -37,8 +37,7 @@ const softSkills = [
             Cristian <span class="text-red-600 dark:text-red-500">Am</span>ezquita <span class="text-red-600 dark:text-red-500">Sot</span>o
           </h3>
         </div>
-        <p class="text-stone-600 dark:text-stone-400 text-base leading-relaxed">
-          Soy un desarrollador que encuentra belleza en la lógica y la eficiencia. Mi enfoque no es solo escribir líneas de código, sino diseñar sistemas que respiren estabilidad. Me muevo como pez en el agua en terminales Linux y arquitecturas Vue, siempre buscando la optimización máxima.
+        <p class="text-stone-600 dark:text-stone-400 text-base leading-relaxed">Soy un ingeniero de sistemas y desarrollador enfocado en transformar ideas en código ordenado, eficiente y capaz de resolver problemas reales. Mi forma de trabajar está muy influenciada por el mundo Linux y el software libre, lo que me lleva a buscar siempre el control, la seguridad y la optimización de los recursos en cada proyecto. En el desarrollo visual, me gusta construir interfaces modernas, fluidas y rápidas que se adapten a una lógica limpia y fácil de mantener. Además, combino el desarrollo de aplicaciones con una visión enfocada en la seguridad y la auditoría, asegurando que los datos sean confiables y que los sistemas sean estables a largo plazo.
         </p>
         <div class="flex gap-5 pt-1">
           <a href="https://github.com/junkdog505" target="_blank" rel="noopener noreferrer" title="GitHub" class="flex items-center gap-1.5 text-xs font-medium text-stone-400 dark:text-stone-500 hover:text-red-600 dark:hover:text-red-500 transition-colors font-mono">
