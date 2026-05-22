@@ -3,11 +3,11 @@
     {
       "titulo": "Sistema de Gestión Integral",
       "descripcion": "Desarrollo de una plataforma web completa con panel de administración.",
-      "imagenDestacada": "/assets/img/proyectos/fs-gestion-main.jpg",
+      "imagenDestacada": "/assets/img/proyectos/fs-gestion-main.svg",
       "linkProyecto": "https://github.com/junkdog/sistema-gestion",
       "estado": 2,
       "galeria": [
-        "/assets/img/proyectos/fs-gestion-1.jpg"
+        "/assets/img/proyectos/fs-gestion-1.svg"
       ]
     }
   ],
@@ -15,11 +15,11 @@
     {
       "titulo": "Landing Page Corporativa",
       "descripcion": "Diseño y maquetación de una landing page optimizada para conversión y SEO.",
-      "imagenDestacada": "/assets/img/proyectos/dw-landing-main.jpg",
+      "imagenDestacada": "/assets/img/proyectos/dw-landing-main.svg",
       "linkProyecto": "https://behance.net/tu-enlace",
       "estado": 2,
       "galeria": [
-        "/assets/img/proyectos/dw-landing-1.jpg"
+        "/assets/img/proyectos/dw-landing-1.svg"
       ]
     }
   ],
@@ -27,11 +27,11 @@
     {
       "titulo": "Libro de Reclamaciones SaaS",
       "descripcion": "Plugin nativo para WordPress que funciona como SaaS.",
-      "imagenDestacada": "/assets/img/proyectos/wp-libro-main.jpg",
+      "imagenDestacada": "/assets/img/proyectos/wp-libro-main.svg",
       "linkProyecto": "https://github.com/junkdog/wp-libro-reclamaciones",
       "estado": 1,
       "galeria": [
-        "/assets/img/proyectos/wp-libro-1.jpg"
+        "/assets/img/proyectos/wp-libro-1.svg"
       ]
     }
   ]

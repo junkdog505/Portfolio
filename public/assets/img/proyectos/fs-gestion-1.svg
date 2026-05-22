@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#0f172a"/>
+  <rect x="60" y="80" width="300" height="60" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <rect x="60" y="160" width="680" height="360" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="400" y="280" fill="#475569" font-family="monospace" font-size="14" text-anchor="middle">Dashboard View</text>
+</svg>

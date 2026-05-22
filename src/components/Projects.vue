@@ -1,23 +1,17 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { GitFork, Lock } from '@lucide/vue';
 
-/**
- * Interfaz para la estructura de un Proyecto
- * estado: 0 = En proceso, 1 = En desarrollo, 2 = Completado
- */
 interface Proyecto {
   titulo: string;
   descripcion: string;
   imagenDestacada: string;
   linkProyecto: string;
-  estado: number; 
+  estado: number;
   tecnologias?: string[];
   galeria: string[];
 }
 
-/**
- * Interfaz para el JSON organizado por categorías
- */
 interface ProyectosData {
   fullStack: Proyecto[];
   disenoWeb: Proyecto[];
@@ -28,33 +22,35 @@ const proyectosData = ref<ProyectosData | null>(null);
 const cargando = ref(true);
 const modalAbierto = ref(false);
 const proyectoSeleccionado = ref<Proyecto | null>(null);
+const imagenZoom = ref<string | null>(null);
 
-const nombresCategorias: Record<keyof ProyectosData, string> = {
+const catKeys: (keyof ProyectosData)[] = ['fullStack', 'disenoWeb', 'pluginsWordpress'];
+const catLabels: Record<keyof ProyectosData, string> = {
   fullStack: 'Full Stack',
   disenoWeb: 'Diseño Web',
   pluginsWordpress: 'Plugins WordPress'
 };
 
-/**
- * Retorna la configuración visual según el código de estado
- */
 const getEstadoInfo = (estado: number) => {
   switch (estado) {
-    case 0: return { texto: 'En proceso', clase: 'bg-red-500/10 border-red-500/20 text-red-400' };
-    case 1: return { texto: 'En desarrollo', clase: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500' };
-    case 2: return { texto: 'Completado', clase: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' };
-    default: return { texto: 'Desconocido', clase: 'bg-gray-500/10 border-gray-500/20 text-gray-400' };
+    case 0: return { label: 'En Desarrollo', clase: 'bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-900 text-red-600 dark:text-red-400' };
+    case 1: return { label: 'MVP', clase: 'bg-amber-50 dark:bg-amber-950/40 border-amber-500 dark:border-amber-500 text-amber-600 dark:text-amber-400' };
+    case 2: return { label: 'Completado', clase: 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400' };
+    default: return { label: '', clase: 'bg-stone-50 dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-500 dark:text-stone-400' };
   }
 };
 
+const imagenCard = (proyecto: Proyecto) => proyecto.imagenDestacada || proyecto.galeria?.[0] || '';
+
 onMounted(async () => {
   try {
-    const response = await fetch('/proyectos.json');
+    const response = await fetch('/datos.json');
     if (response.ok) {
-      proyectosData.value = await response.json();
+      const data = await response.json();
+      proyectosData.value = data.proyectos ?? null;
     }
   } catch (error) {
-    console.error("Error cargando proyectos.json:", error);
+    console.error("Error cargando proyectos:", error);
   } finally {
     cargando.value = false;
   }
@@ -71,79 +67,62 @@ const cerrarModal = () => {
   proyectoSeleccionado.value = null;
   document.body.style.overflow = 'auto';
 };
+
+const abrirZoom = (src: string) => {
+  imagenZoom.value = src;
+};
+
+const cerrarZoom = () => {
+  imagenZoom.value = null;
+};
 </script>
 
 <template>
-  <section id="proyectos" class="py-16 space-y-20">
-    <div class="flex items-center mb-10">
-      <h2 class="text-xl font-mono font-bold text-white tracking-widest uppercase">
-        PROYECTOS_Y_DESPLIEGUES
-      </h2>
-    </div>
+  <section id="proyectos" class="py-16 space-y-16 lg:pr-14">
+    <h2 class="text-lg font-bold text-stone-900 dark:text-stone-200 tracking-[0.15em] uppercase font-sans">Proyectos</h2>
 
     <div v-if="cargando" class="flex justify-center py-20">
-      <div class="w-10 h-10 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin"></div>
+      <div class="w-10 h-10 border-2 border-red-200 dark:border-red-900 border-t-red-700 dark:border-t-red-500 rounded-full animate-spin"></div>
     </div>
 
-    <div v-else-if="proyectosData" class="space-y-24">
-      <div v-for="(lista, key) in proyectosData" :key="key" class="space-y-10">
+    <div v-else-if="proyectosData" class="space-y-20">
+      <div v-for="key in catKeys" :key="key" v-show="proyectosData[key]?.length" class="space-y-8">
         <div class="flex items-center gap-4">
-          <h3 class="text-emerald-400 font-mono text-sm font-bold uppercase tracking-tighter">
-            // {{ nombresCategorias[key as keyof ProyectosData] }}
+          <h3 class="text-red-600 dark:text-red-500 text-sm uppercase tracking-tight font-bold font-sans">
+            // {{ catLabels[key] }}
           </h3>
-          <div class="h-px flex-1 bg-white/5"></div>
+          <div class="h-px flex-1 bg-stone-200 dark:bg-stone-800"></div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div 
-            v-for="(proyecto, index) in lista" 
-            :key="index"
-            @click="abrirDetalle(proyecto)"
-            class="group relative bg-white/5 border border-white/10 rounded-3xl overflow-hidden transition-all duration-500 hover:border-emerald-500/40 cursor-pointer flex flex-col"
-          >
-            <div class="relative h-52 overflow-hidden bg-neutral-900">
-              <img 
-                :src="proyecto.imagenDestacada" 
-                :alt="proyecto.titulo" 
-                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                :class="proyecto.estado < 2 ? 'opacity-30 grayscale' : 'opacity-70'"
-              />
-              <div 
-                v-if="proyecto.estado < 2"
-                class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]"
-              >
-                <div class="flex flex-col items-center gap-2">
-                  <div class="w-2 h-2 rounded-full bg-emerald-500" :class="proyecto.estado === 1 ? 'animate-pulse' : ''"></div>
-                  <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-widest font-bold">
-                    {{ getEstadoInfo(proyecto.estado).texto }}
-                  </span>
-                </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div v-for="(proyecto, index) in proyectosData[key]" :key="index" @click="abrirDetalle(proyecto)"
+            class="group relative bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl overflow-hidden transition-all duration-300 hover:border-red-400 dark:hover:border-red-800 hover:shadow-sm cursor-pointer flex flex-col">
+            <div class="relative h-48 overflow-hidden bg-stone-100 dark:bg-stone-800">
+              <img v-if="imagenCard(proyecto)" :src="imagenCard(proyecto)" :alt="proyecto.titulo"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              <div v-if="!imagenCard(proyecto)" class="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-stone-100 dark:bg-stone-800">
+                <span class="text-[10px] uppercase tracking-[0.15em] font-bold font-sans"
+                  :class="proyecto.estado === 0 ? 'text-red-600 dark:text-red-400' : proyecto.estado === 1 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'">
+                  {{ getEstadoInfo(proyecto.estado).label }}
+                </span>
               </div>
             </div>
 
-            <div class="p-7 flex-1 flex flex-col justify-between">
-              <div class="space-y-3">
+            <div class="p-5 flex-1 flex flex-col justify-between">
+              <div class="space-y-2.5">
                 <div class="flex justify-between items-start gap-2">
-                  <h4 class="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
+                  <h4 class="text-lg font-bold text-stone-900 dark:text-stone-200 group-hover:text-red-600 dark:group-hover:text-red-500 transition-colors font-sans">
                     {{ proyecto.titulo }}
                   </h4>
                   <span :class="['text-[8px] px-2 py-0.5 rounded border font-mono uppercase', getEstadoInfo(proyecto.estado).clase]">
-                    {{ getEstadoInfo(proyecto.estado).texto }}
+                    {{ getEstadoInfo(proyecto.estado).label }}
                   </span>
                 </div>
-                <p class="text-gray-400 text-sm leading-relaxed line-clamp-2 font-sans font-light">
-                  {{ proyecto.descripcion }}
-                </p>
+                <p class="text-stone-500 dark:text-stone-400 text-sm leading-relaxed line-clamp-2 font-light">{{ proyecto.descripcion }}</p>
               </div>
 
-              <div v-if="proyecto.tecnologias" class="flex flex-wrap gap-2 pt-5">
-                <span 
-                  v-for="tech in proyecto.tecnologias" 
-                  :key="tech"
-                  class="text-[10px] font-mono text-gray-500 uppercase"
-                >
-                  #{{ tech }}
-                </span>
+              <div v-if="proyecto.tecnologias" class="flex flex-wrap gap-2 pt-4">
+                <span v-for="tech in proyecto.tecnologias" :key="tech" class="text-[10px] font-mono text-stone-400 dark:text-stone-500 uppercase">#{{ tech }}</span>
               </div>
             </div>
           </div>
@@ -153,77 +132,51 @@ const cerrarModal = () => {
 
     <Teleport to="body">
       <Transition name="fade">
-        <div 
-          v-if="modalAbierto && proyectoSeleccionado" 
-          class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md"
-          @click.self="cerrarModal"
-        >
-          <div class="bg-[#0f0f0f] border border-white/10 w-full max-w-5xl max-h-[90vh] rounded-[2rem] overflow-hidden flex flex-col shadow-2xl">
-            <div class="flex items-center justify-between p-6 border-b border-white/5">
-              <div class="flex items-center gap-4">
-                <span class="text-emerald-500 font-mono text-xs font-bold uppercase tracking-[0.2em]">Detalles_Proyecto</span>
+        <div v-if="modalAbierto && proyectoSeleccionado" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-white/95 dark:bg-stone-950/95 backdrop-blur-md" @click.self="cerrarModal">
+          <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 w-full max-w-5xl max-h-[90vh] rounded-xl overflow-hidden flex flex-col shadow-2xl">
+            <div class="flex items-center justify-between p-5 border-b border-stone-100 dark:border-stone-800">
+              <div class="flex items-center gap-3">
+                <span class="text-red-600 dark:text-red-500 font-mono text-xs font-bold uppercase tracking-[0.15em]">Detalles</span>
                 <span :class="['text-[9px] px-2 py-0.5 rounded border font-mono uppercase', getEstadoInfo(proyectoSeleccionado.estado).clase]">
-                  {{ getEstadoInfo(proyectoSeleccionado.estado).texto }}
+                  {{ getEstadoInfo(proyectoSeleccionado.estado).label }}
                 </span>
               </div>
-              <button 
-                @click="cerrarModal" 
-                class="group/close p-2 hover:bg-white/10 rounded-full text-gray-400 hover:text-white transition-all cursor-pointer active:scale-90"
-              >
-                <svg class="w-6 h-6 transition-transform group-hover/close:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
+              <button @click="cerrarModal" class="p-2 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg text-stone-400 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300 transition-all cursor-pointer text-xl font-bold">&times;</button>
             </div>
 
-            <div class="overflow-y-auto p-8 lg:p-12 space-y-12 custom-scrollbar">
-              <div class="grid lg:grid-cols-2 gap-12">
-                <div class="space-y-6">
-                  <h3 class="text-3xl lg:text-4xl font-bold text-white leading-tight">{{ proyectoSeleccionado.titulo }}</h3>
-                  <p class="text-gray-300 text-lg leading-relaxed font-light">{{ proyectoSeleccionado.descripcion }}</p>
-                  
-                  <div v-if="proyectoSeleccionado.linkProyecto" class="pt-4">
-                    <a 
-                      :href="proyectoSeleccionado.linkProyecto" 
-                      target="_blank"
-                      class="inline-flex items-center gap-3 px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold rounded-2xl transition-all active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
-                    >
-                      Explorar Proyecto
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="overflow-y-auto p-6 lg:p-10 space-y-10">
+              <div class="grid lg:grid-cols-2 gap-10">
+                <div class="space-y-5">
+                  <h3 class="text-2xl lg:text-3xl font-bold text-stone-900 dark:text-stone-100 leading-tight">{{ proyectoSeleccionado.titulo }}</h3>
+                  <p class="text-stone-600 dark:text-stone-400 text-base leading-relaxed font-light">{{ proyectoSeleccionado.descripcion }}</p>
+                  <div class="pt-3">
+                    <a v-if="proyectoSeleccionado.linkProyecto" :href="proyectoSeleccionado.linkProyecto" target="_blank" rel="noopener noreferrer"
+                      class="inline-flex items-center gap-2 px-7 py-3 bg-red-800 hover:bg-red-700 text-white font-semibold rounded-lg transition-all active:scale-95 shadow-md text-sm no-underline">
+                      <GitFork :size="17" stroke-width="1.5" />
+                      Ver en GitHub
                     </a>
-                  </div>
-                </div>
-
-                <div v-if="proyectoSeleccionado.tecnologias" class="space-y-4">
-                  <h5 class="text-emerald-500 font-mono text-xs font-bold uppercase tracking-widest">Stack Técnico</h5>
-                  <div class="flex flex-wrap gap-2">
-                    <span 
-                      v-for="t in proyectoSeleccionado.tecnologias" 
-                      :key="t" 
-                      class="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs text-gray-300 font-mono"
-                    >
-                      {{ t }}
+                    <span v-else class="inline-flex items-center gap-2 px-7 py-3 bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-500 dark:text-stone-400 font-semibold rounded-lg text-sm">
+                      <Lock :size="15" stroke-width="1.5" />
+                      Proyecto privado
                     </span>
                   </div>
                 </div>
+
+                <div v-if="proyectoSeleccionado.tecnologias" class="space-y-3">
+                  <h5 class="text-red-600 dark:text-red-500 text-xs uppercase tracking-[0.1em] font-bold font-sans">Stack Técnico</h5>
+                  <div class="flex flex-wrap gap-2">
+                    <span v-for="tech in proyectoSeleccionado.tecnologias" :key="tech"
+                      class="px-3 py-1.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg text-xs text-stone-600 dark:text-stone-300 font-mono">{{ tech }}</span>
+                  </div>
+                </div>
               </div>
 
-              <!-- Galería Deslizable -->
-              <div v-if="proyectoSeleccionado.galeria.length > 0" class="space-y-6">
-                <div class="flex items-center justify-between">
-                  <h5 class="text-emerald-500 font-mono text-xs font-bold uppercase tracking-widest">Galería_Capturas</h5>
-                  <span class="text-[10px] text-gray-600 font-mono uppercase tracking-tighter sm:hidden">Desliza →</span>
-                </div>
-                
-                <div class="relative group/slider">
-                  <div class="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 custom-scrollbar scroll-smooth">
-                    <div 
-                      v-for="(img, i) in proyectoSeleccionado.galeria" 
-                      :key="i"
-                      class="flex-none w-[90%] sm:w-[80%] lg:w-[70%] snap-center rounded-2xl overflow-hidden border border-white/10 aspect-video bg-neutral-900 shadow-xl"
-                    >
-                      <img :src="img" class="w-full h-full object-cover select-none" loading="lazy" />
-                    </div>
+              <div v-if="proyectoSeleccionado.galeria.length > 0" class="space-y-4">
+                <h5 class="text-red-600 dark:text-red-500 text-xs uppercase tracking-[0.1em] font-bold font-sans">Galería</h5>
+                <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 scroll-smooth">
+                  <div v-for="(img, i) in proyectoSeleccionado.galeria" :key="i" @click.stop="abrirZoom(img)"
+                    class="flex-none w-[90%] sm:w-[80%] lg:w-[70%] snap-center rounded-lg overflow-hidden border border-stone-200 dark:border-stone-700 aspect-video bg-stone-100 dark:bg-stone-800 shadow-sm cursor-zoom-in group/img hover:border-red-400 dark:hover:border-red-800 transition-colors">
+                    <img :src="img" :alt="'Captura ' + (i + 1) + ' del proyecto ' + proyectoSeleccionado.titulo" class="w-full h-full object-cover select-none transition-transform duration-300 group-hover/img:scale-105" loading="lazy" />
                   </div>
                 </div>
               </div>
@@ -231,43 +184,25 @@ const cerrarModal = () => {
           </div>
         </div>
       </Transition>
+
+      <Transition name="fade">
+        <div v-if="imagenZoom" class="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-10 bg-black/90 backdrop-blur-sm cursor-zoom-out" @click="cerrarZoom">
+          <button @click="cerrarZoom" class="absolute top-4 right-4 p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer text-2xl font-bold">&times;</button>
+          <img :src="imagenZoom" alt="Vista ampliada" class="max-w-full max-h-[90vh] rounded-xl object-contain shadow-2xl" />
+        </div>
+      </Transition>
     </Teleport>
   </section>
 </template>
 
 <style scoped>
-.font-sans {
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;  
+  -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
+.fade-enter-active, .fade-leave-active { transition: opacity 0.25s ease; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
-
-.custom-scrollbar::-webkit-scrollbar {
-  height: 6px;
-  width: 6px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(16, 185, 129, 0.4);
-}
-
-@media (min-width: 1024px) {
-  .snap-x::-webkit-scrollbar {
-    height: 4px;
-  }
-}
 </style>

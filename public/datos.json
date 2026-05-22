@@ -1,0 +1,79 @@
+{
+  "formacion": [
+    {
+      "periodo": "2026 - Actual",
+      "titulo": "Ciberseguridad y Auditoría Informática",
+      "institucion": "Tecsup",
+      "ubicacion": "Lima, Perú",
+      "descripcion": "Especialización técnica avanzada enfocada en la protección de infraestructuras críticas, análisis de vulnerabilidades y cumplimiento de normativas de seguridad informática.",
+      "habilidades": ["Pentesting", "Criptografía", "Seguridad en Redes", "Seguridad Perimetral", "Auditoría Informática"],
+      "enCurso": true
+    },
+    {
+      "periodo": "2020 - 2024",
+      "titulo": "Ingeniería de Sistemas",
+      "institucion": "Universidad Católica de Santa María",
+      "ubicacion": "Arequipa, Perú",
+      "descripcion": "Grado académico con sólida base en ingeniería de software, gestión de servicios de TI y diseño de soluciones tecnológicas empresariales.",
+      "habilidades": ["Desarrollo Web", "Base de Datos", "Redes", "Gestión de Proyectos", "Optimización de Procesos", "ISO 9001"],
+      "enCurso": false
+    }
+  ],
+  "experiencia": [
+    {
+      "periodo": "2024 - Actual",
+      "cargo": "Desarrollador y Diseñador Web",
+      "empresa": "The Web Factory (Tac Digital)",
+      "enlaceEmpresa": "https://twf.pe/",
+      "descripcion": "Desarrollo plataformas web personalizadas y de alto rendimiento utilizando WordPress, Elementor, PHP y React. Implemento sitios web basados en estándares web, integrando diseños desde herramientas como Figma, Photoshop e Illustrator. Además, desarrollo plugins a medida para WordPress e integro APIs externas según los requerimientos del cliente.",
+      "tecnologias": ["WordPress", "Elementor", "PHP", "HTML", "CSS", "JavaScript", "SQL", "React"]
+    },
+    {
+      "periodo": "2024",
+      "cargo": "Desarrollador Backend - Freelance ",
+      "empresa": "Estudios Creativos del Perú",
+      "enlaceEmpresa": "https://estudioscreativos.pe/",
+      "descripcion": "Desarrollé el backend de un sistema ERP con Laravel y PHP, implementando lógica de negocio robusta y escalable. Participé en el ciclo completo de desarrollo, incluyendo pruebas integrales y documentación técnica para garantizar la mantenibilidad del software.",
+      "tecnologias": ["Laravel", "MySQL", "PHP", "Testing", "Documentación"]
+    }
+  ],
+  "proyectos": {
+    "fullStack": [
+
+    ],
+    "disenoWeb": [
+
+    ],
+    "pluginsWordpress": [
+      {
+        "titulo": "Plugin de Libro de Reclamaciones para Perú",
+        "descripcion": "Plugin nativo para WordPress que permite a empresas gestionar su libro de reclamaciones virtual de manera segura y eficiente, con todas las normativas que impone Indecopi.",
+        "imagenDestacada": "/assets/img/proyectos/libro-reclamaciones/lb-imagen-destacada.png",
+        "linkProyecto": "",
+        "estado": 1,
+        "tecnologias": ["PHP", "WordPress", "MySQL", "JavaScript", "CSS", "PDF", "CSV"],
+        "galeria": [
+          "/assets/img/proyectos/libro-reclamaciones/lb-1.png",
+          "/assets/img/proyectos/libro-reclamaciones/lb-2.png",
+          "/assets/img/proyectos/libro-reclamaciones/lb-3.png",
+          "/assets/img/proyectos/libro-reclamaciones/lb-4.png"
+        ]
+      },
+      {
+        "titulo": "CSS Random Background",
+        "descripcion": "Plugin para Wordpress que se puede usar con cualquier constructor de estilos como Divi, Elementor o Gutenberg para agregar un fondo aleatorio a tu sitio web a un contenedor de manera dinámica creando un shortcode por cada post (galería) para mantener ordenado el contenido.",
+        "imagenDestacada": "/assets/img/proyectos/css-random-background/rb-imagen-destacada.png",
+        "linkProyecto": "https://github.com/junkdog505/CSS-Random-Background",
+        "estado": 1,
+        "tecnologias": ["PHP", "WordPress", "MySQL", "JavaScript", "CSS", "PDF", "CSV"],
+        "galeria": [
+          "/assets/img/proyectos/css-random-background/rb-1.png",
+          "/assets/img/proyectos/css-random-background/rb-2.png",
+          "/assets/img/proyectos/css-random-background/rb-3.png",
+          "/assets/img/proyectos/css-random-background/rb-4.png",
+          "/assets/img/proyectos/css-random-background/rb-5.png"
+        ]
+      }
+    ]
+  }
+}
